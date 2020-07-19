@@ -10,7 +10,7 @@ export default class Recipe {
   async getRecipe() {
     try {
       const res = await axios(
-        `https://www.food2fork.com/api/get?key=${key}&rId=${this.id}`
+        `https://forkify-api.herokuapp.com/api/get?rId=${this.id}`
       );
       this.title = res.data.recipe.title;
       this.author = res.data.recipe.publisher;
@@ -41,7 +41,7 @@ export default class Recipe {
       "teaspoons",
       "teaspoon",
       "cups",
-      "pounds"
+      "pounds",
     ];
     const unitShort = [
       "tbsp",
@@ -51,12 +51,12 @@ export default class Recipe {
       "tsp",
       "tsp",
       "cup",
-      "pound"
+      "pound",
     ];
 
     const units = [...unitShort, "kg", "g"];
 
-    const newIngredients = this.ingredients.map(el => {
+    const newIngredients = this.ingredients.map((el) => {
       // Uniform Unit
       let ingredient = el.toLowerCase();
       unitLong.forEach((unit, i) => {
@@ -67,7 +67,7 @@ export default class Recipe {
 
       // parse ingredients into count, unit and ingredients
       const arrIng = ingredient.split(" ");
-      const unitIndex = arrIng.findIndex(el1 => units.includes(el1));
+      const unitIndex = arrIng.findIndex((el1) => units.includes(el1));
 
       let objIng;
       if (unitIndex > -1) {
@@ -82,21 +82,21 @@ export default class Recipe {
         objIng = {
           count,
           unit: arrIng[unitIndex],
-          ingredient: arrIng.slice(unitIndex + 1).join(" ")
+          ingredient: arrIng.slice(unitIndex + 1).join(" "),
         };
       } else if (parseInt(arrIng[0], 10)) {
         //there is no unit but the 1st element is number
         objIng = {
           count: parseInt(arrIng[0], 10),
           unit: "",
-          ingredient: arrIng.slice(1).join(" ")
+          ingredient: arrIng.slice(1).join(" "),
         };
       } else if (unitIndex === -1) {
         // there is no unit and no number in the 1st position
         objIng = {
           count: 1,
           unit: "",
-          ingredient
+          ingredient,
         };
       }
 
@@ -112,7 +112,7 @@ export default class Recipe {
 
     // ingredients
 
-    this.ingredients.forEach(el => {
+    this.ingredients.forEach((el) => {
       el.count = el.count * (newServing / this.servings);
     });
 
